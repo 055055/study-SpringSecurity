@@ -1,5 +1,8 @@
 package com.example.demospringsecurityform.form;
 
+import com.example.demospringsecurityform.account.AccountContext;
+import com.example.demospringsecurityform.account.AccountReposiroty;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +11,10 @@ import java.security.Principal;
 
 @Controller
 public class SampleController {
+    @Autowired SampleService sampleService;
+    @Autowired
+    AccountReposiroty accountReposiroty;
+
     @GetMapping("/")
     public String index(Model model, Principal principal){
         if(principal == null){
@@ -27,6 +34,8 @@ public class SampleController {
     @GetMapping("/dashboard")
     public String dashboard(Model model, Principal principal){
         model.addAttribute("message","Hello "+principal.getName());
+        AccountContext.setAccount(accountReposiroty.findByUsername(principal.getName()));
+       sampleService.dashboard();
         return "dashboard";
     }
     @GetMapping("/admin")
