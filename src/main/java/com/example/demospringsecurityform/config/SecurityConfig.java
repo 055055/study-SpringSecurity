@@ -48,7 +48,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .expressionHandler(expressionHandler());
 
-                http.formLogin();
+                http.formLogin()
+                        //.usernameParameter("my-username") //username 변수명 변경
+                        //.passwordParameter("my-password") //password 변수명 변경
+                        //.loginPage("/signin")  //login페이지 커스터마이징하면 defaultLogin/LogoutPageGeneratingFilter가 등록 안된다. default설정을 안쓴다는 뜻
+                ;
                 http.httpBasic();
 
                 http.logout()
