@@ -51,6 +51,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 http.formLogin();
                 http.httpBasic();
 
+                http.logout()
+                            //.logoutUrl("/logout") //logout 처리하는 url을 설정함.
+                            .logoutSuccessUrl("/"); //logout후 처리되는 Url
+
+
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); //현재 쓰레드안의 하위 쓰레드에까지 씨큐리티컨텍스트를 공유하는 전략 for @Async
 
     }
