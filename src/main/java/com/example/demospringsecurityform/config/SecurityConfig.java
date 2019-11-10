@@ -1,6 +1,7 @@
 package com.example.demospringsecurityform.config;
 
 import com.example.demospringsecurityform.account.AccountService;
+import com.example.demospringsecurityform.common.LoggingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.addFilterBefore(new LoggingFilter(), WebAsyncManagerIntegrationFilter.class); //WEbAsyncManagerIntegrationFilter 앞에 필터를 두어서 모든 필터에 적용
+
         http.authorizeRequests()
                     .mvcMatchers("/","/info","/account/**","/signup").permitAll()
                     .mvcMatchers("/admin").hasRole("ADMIN")
@@ -66,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .loginPage("/login")  //login페이지 커스터마이징하면 defaultLogin/LogoutPageGeneratingFilter가 등록 안된다. default설정을 안쓴다는 뜻
                         .permitAll();
 
-                http.rememberMe()                           //id기억하기 쿠키에 토큰 생성
+                http.rememberMe()                          //id기억하기 쿠키에 토큰 생성
                         .userDetailsService(accountService)
                         .key("remember-me-sample");
 
