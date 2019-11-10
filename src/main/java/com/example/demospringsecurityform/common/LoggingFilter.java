@@ -17,7 +17,6 @@ public class LoggingFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start(((HttpServletRequest)request).getRequestURI() );//stopWatch start에 task이름 부여
-
         chain.doFilter(request,response); //chain처리 해야지 다음 필터로 체이닝 연결
 
         stopWatch.stop();
