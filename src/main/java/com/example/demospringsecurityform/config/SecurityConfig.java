@@ -1,5 +1,7 @@
 package com.example.demospringsecurityform.config;
 
+import com.example.demospringsecurityform.account.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
@@ -29,6 +31,9 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    AccountService accountService;
 
     public SecurityExpressionHandler expressionHandler(){
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
@@ -61,6 +66,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .loginPage("/login")  //login페이지 커스터마이징하면 defaultLogin/LogoutPageGeneratingFilter가 등록 안된다. default설정을 안쓴다는 뜻
                         .permitAll();
 
+                http.rememberMe()                           //id기억하기 쿠키에 토큰 생성
+                        .userDetailsService(accountService)
+                        .key("remember-me-sample");
+
                 http.httpBasic();
 
                 http.logout()
@@ -73,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 http.exceptionHandling()
                        // .accessDeniedPage("/access-denied");  // 페이지에서 인증이 거부 되었을 때 보여주는 페이지. default는 화이트 에러 페이지.. 이렇게하면 로그를 확인하지 못함.
-                         .accessDeniedHandler(new AccessDeniedHandler() { //accessDeniedHandler를 사용하면 아래와 같이 에러로그도 남기고 페이지로 넘길 수 도 있음
+                         .accessDeniedHandler(new AccessDeniedHandler() { //accessDeniedHandler를 사용하면 아래와 같이 에러로그도 남기고 페이지로 넘길 수 도 있
                              @Override
                              public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
                                 UserDetails principal =  (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
