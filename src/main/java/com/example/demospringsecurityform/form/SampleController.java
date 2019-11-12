@@ -2,8 +2,11 @@ package com.example.demospringsecurityform.form;
 
 import com.example.demospringsecurityform.account.AccountContext;
 import com.example.demospringsecurityform.account.AccountReposiroty;
+import com.example.demospringsecurityform.account.UserAccount;
+import com.example.demospringsecurityform.book.BookReposiroty;
 import com.example.demospringsecurityform.common.SecurityLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,12 +23,12 @@ public class SampleController {
     AccountReposiroty accountReposiroty;
 
     @GetMapping("/")
-    public String index(Model model, Principal principal){
-        if(principal == null){
+    public String index(Model model, @AuthenticationPrincipal UserAccount userAccount){
+        if(userAccount == null){
             model.addAttribute("message","Hello Spring Security");
 
         }else{
-            model.addAttribute("message","Hello "+principal.getName());
+            model.addAttribute("message","Hello "+userAccount.getUsername());
 
         }
         return "index";
@@ -45,6 +48,7 @@ public class SampleController {
     @GetMapping("/admin")
     public String admin(Model model,Principal principal){
         model.addAttribute("message","Hello Admin "+principal.getName());
+
         return "admin";
     }
 
