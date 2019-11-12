@@ -21,6 +21,8 @@ public class SampleController {
     @Autowired SampleService sampleService;
     @Autowired
     AccountReposiroty accountReposiroty;
+    @Autowired
+    BookReposiroty bookReposiroty;
 
     @GetMapping("/")
     public String index(Model model, @AuthenticationPrincipal UserAccount userAccount){
@@ -55,6 +57,8 @@ public class SampleController {
     @GetMapping("/user")
     public String user(Model model,Principal principal){
         model.addAttribute("message","Hello User "+principal.getName());
+        model.addAttribute("books",bookReposiroty.findCurrentUserBooks());
+
         return "user";
     }
 
